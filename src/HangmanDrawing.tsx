@@ -244,7 +244,7 @@ function Keyboard({ disabled = false, activeLetter = [], inactiveLetters = [], a
 }
 
 // Modern HangmanDrawing Component (simplified version)
-function HangmanDrawing({ numberOfGuesses, isWinner}) {
+function HangmanDrawing({ numberOfGuesses }) {
   const HEAD = (
     <div
       key="head"
@@ -264,31 +264,9 @@ function HangmanDrawing({ numberOfGuesses, isWinner}) {
       }}
     >
       {/* Simple face */}
-      <div style={{ 
-        position: "absolute", 
-        top: "18px", left: "12px", 
-        width: "6px", height: "6px", 
-        background: "#2d3436", 
-        borderRadius: "50%" }} />
-
-      <div style={{ 
-        position: "absolute", 
-        top: "18px", right: "12px", 
-        width: "6px", height: "6px", 
-        background: "#2d3436", 
-        borderRadius: "50%" }} />
-
-      <div style={{ 
-  position: "absolute", 
-  bottom: "15px", 
-  left: "50%", 
-  transform: "translateX(-50%)", 
-  width: "16px", 
-  height: "8px", 
-  border: "2px solid #2d3436", 
-  borderBottom: isWinner ? "2px solid #2d3436" : "none",
-  borderTop: isWinner ? "none" : "2px solid #2d3436",
-  borderRadius: isWinner ? "0 0 20px 20px" : "20px 20px 0 0"}} />
+      <div style={{ position: "absolute", top: "18px", left: "12px", width: "6px", height: "6px", background: "#2d3436", borderRadius: "50%" }} />
+      <div style={{ position: "absolute", top: "18px", right: "12px", width: "6px", height: "6px", background: "#2d3436", borderRadius: "50%" }} />
+      <div style={{ position: "absolute", bottom: "15px", left: "50%", transform: "translateX(-50%)", width: "16px", height: "8px", border: "2px solid #2d3436", borderBottom: "none", borderRadius: "20px 20px 0 0" }} />
     </div>
   );
 
@@ -434,8 +412,7 @@ function HangmanDrawing({ numberOfGuesses, isWinner}) {
       </style>
       
       <div style={{ position: "relative" }}>
-        {isWinner ? [...BODY_PARTS.slice(0, Math.max(1, numberOfGuesses))] :
-        BODY_PARTS.slice(0, numberOfGuesses)}
+        {BODY_PARTS.slice(0, numberOfGuesses)}
         
         {/* Gallows structure */}
         <div style={{
@@ -592,7 +569,7 @@ function App() {
             }}>
               Progress
             </h2>
-            <HangmanDrawing numberOfGuesses={incorrectLetters.length} isWinner={isWinner}/>
+            <HangmanDrawing numberOfGuesses={incorrectLetters.length} isWinner={isWinner} />
             
             {/* Game Stats */}
             <div style={{
