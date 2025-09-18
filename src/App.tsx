@@ -661,12 +661,12 @@ function App() {
               </h2>
               <div style={{
                 background: "rgba(255, 255, 255, 0.95)",
-                padding: "2rem",
-                borderRadius: "20px",
+                padding: "0rem",
+                borderRadius: "60px",
                 boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
                 backdropFilter: "blur(10px)",
-                width: "100%",
+                width: "80%",
                 display: "flex",
                 justifyContent: "center"
               }}>
