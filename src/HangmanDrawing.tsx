@@ -637,13 +637,13 @@ function App() {
                 Word to Guess
               </h2>
               <div style={{
-                background: "rgba(255, 255, 255, 0.95)",
-                padding: "2rem",
-                borderRadius: "20px",
+                background: "rgba(47, 23, 23, 0.95)",
+                padding: "0rem",
+                borderRadius: "50px",
                 boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
                 backdropFilter: "blur(10px)",
-                width: "100%",
+                width: "90%",
                 display: "flex",
                 justifyContent: "center"
               }}>
