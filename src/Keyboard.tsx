@@ -1,12 +1,9 @@
-import type { Key } from "react"
 import style from "./keyboard.module.css"
 
 const KEYS = [
-    "A", "B", "C", "D", "E", "F",
-    "G", "H", "I", "J", "K", "L", 
-    "M", "N", "O", "P", "Q", "R",
-    "S", "T", "U", "V", "W", "X",
-    "Y", "Z"
+    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+    ["Z", "X", "C", "V", "B", "N", "M"]
 ]
 
 type KeyboardProps = {
@@ -18,26 +15,26 @@ type KeyboardProps = {
 
 export function Keyboard({ disabled = false, activeLetter, inactiveLetters, addGuessedLetter }: KeyboardProps) {
     return (
-        <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(3rem, 1fr))",
-            gap: ".5rem",
-        }}>
-            {KEYS.map(key => {
-                const isActive = activeLetter.includes(key)
-                const isInactive = inactiveLetters.includes(key)
+        <div className="keyboard-container">
+            {KEYS.map((row, rowIndex) => (
+                <div key={rowIndex} className="keyboard-row">
+                    {row.map(key => {
+                        const isActive = activeLetter.includes(key)
+                        const isInactive = inactiveLetters.includes(key)
 
-                return (
-                    <button 
-                        onClick={() => addGuessedLetter(key)}
-                        className={`${style.btn} ${isActive ? style.active : ""} ${isInactive ? style.inactive : ""}`}
-                        key={key}
-                        disabled={isActive || isInactive || disabled}
-                    >
-                        {key}
-                    </button>
-                )
-            })}
+                        return (
+                            <button 
+                                onClick={() => addGuessedLetter(key)}
+                                className={`${style.btn} ${isActive ? style.active : ""} ${isInactive ? style.inactive : ""}`}
+                                key={key}
+                                disabled={isActive || isInactive || disabled}
+                            >
+                                {key}
+                            </button>
+                        )
+                    })}
+                </div>
+            ))}
         </div>
     )
 }

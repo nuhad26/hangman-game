@@ -1,0 +1,554 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Global styles and animations */
+@keyframes statusPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes letterGlow {
+  0% { filter: brightness(1) drop-shadow(0 0 5px currentColor); }
+  100% { filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.5; transform: scale(1.5) rotate(180deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes letterReveal {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.5) rotateY(-90deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1.05) rotateY(0deg); 
+  }
+}
+
+@keyframes headAppear {
+  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes bodyGrow {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes rightArmSwing {
+  0% { transform: rotate(0deg) scaleX(0); opacity: 0; }
+  100% { transform: rotate(-35deg) scaleX(1); opacity: 1; }
+}
+
+@keyframes leftArmSwing {
+  0% { transform: rotate(0deg) scaleX(0); opacity: 0; }
+  100% { transform: rotate(35deg) scaleX(1); opacity: 1; }
+}
+
+@keyframes rightLegSwing {
+  0% { transform: rotate(0deg) scaleX(0); opacity: 0; }
+  100% { transform: rotate(40deg) scaleX(1); opacity: 1; }
+}
+
+@keyframes leftLegSwing {
+  0% { transform: rotate(0deg) scaleX(0); opacity: 0; }
+  100% { transform: rotate(-40deg) scaleX(1); opacity: 1; }
+}
+
+/* Main app container */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.app-content {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.main-game-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 3rem;
+  width: 100%;
+  align-items: start;
+  justify-content: center;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.word-display {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.keyboard-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Utility classes for common styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.game-status {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.game-status.winner {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.game-status.loser {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.game-status.playing {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.word-container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0rem;
+  border-radius: 60px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.section-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  margin: 0;
+}
+
+/* HangmanDrawing styles */
+.hangman-drawing {
+  position: relative;
+  padding: 30px;
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  margin: 20px;
+}
+
+.hangman-parts {
+  position: relative;
+}
+
+/* Hangman body parts */
+.hangman-head {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  border: 3px solid #2d3436;
+  position: absolute;
+  top: 55px;
+  right: -33px;
+  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
+  transform: scale(0);
+  animation: headAppear 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+  overflow: hidden;
+}
+
+.hangman-head.winner .face-mouth {
+  border-bottom: 2px solid #2d3436;
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+}
+
+.hangman-head .face-mouth {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 8px;
+  border: 2px solid #2d3436;
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+}
+
+.hangman-head .face-eye {
+  position: absolute;
+  top: 18px;
+  width: 6px;
+  height: 6px;
+  background: #2d3436;
+  border-radius: 50%;
+}
+
+.hangman-head .face-eye.left {
+  left: 12px;
+}
+
+.hangman-head .face-eye.right {
+  right: 12px;
+}
+
+.hangman-body {
+  width: 40px;
+  height: 120px;
+  background: linear-gradient(180deg, #74b9ff 0%, #0984e3 100%);
+  border: 2px solid #2d3436;
+  border-radius: 20px 20px 5px 5px;
+  position: absolute;
+  top: 118px;
+  right: -22px;
+  box-shadow: inset -3px 0 8px rgba(0,0,0,0.1), 0 3px 10px rgba(0,0,0,0.2);
+  transform: scaleY(0);
+  transform-origin: top center;
+  animation: bodyGrow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+}
+
+.hangman-arm {
+  width: 80px;
+  height: 12px;
+  background: linear-gradient(90deg, #ffeaa7 0%, #fab1a0 100%);
+  border: 2px solid #2d3436;
+  border-radius: 6px;
+  position: absolute;
+  top: 140px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transform: rotate(0deg) scaleX(0);
+}
+
+.hangman-arm.right {
+  right: -78px;
+  transform-origin: left center;
+  animation: rightArmSwing 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+}
+
+.hangman-arm.left {
+  right: 2px;
+  background: linear-gradient(90deg, #fab1a0 0%, #ffeaa7 100%);
+  transform-origin: right center;
+  animation: leftArmSwing 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+}
+
+.hangman-leg {
+  width: 90px;
+  height: 14px;
+  background: linear-gradient(90deg, #fd79a8 0%, #e84393 100%);
+  border: 2px solid #2d3436;
+  border-radius: 7px;
+  position: absolute;
+  top: 230px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transform: rotate(0deg) scaleX(0);
+}
+
+.hangman-leg.right {
+  right: -88px;
+  transform-origin: left center;
+  animation: rightLegSwing 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+}
+
+.hangman-leg.left {
+  right: 2px;
+  background: linear-gradient(90deg, #e84393 0%, #fd79a8 100%);
+  transform-origin: right center;
+  animation: leftLegSwing 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+}
+
+/* Gallows structure */
+.gallows-rope {
+  height: 50px;
+  width: 6px;
+  background: repeating-linear-gradient(0deg, #8b4513 0px, #a0522d 2px, #654321 4px);
+  position: absolute;
+  top: 0;
+  right: -3px;
+  border-radius: 3px;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.3), inset -1px 0 2px rgba(0,0,0,0.2);
+}
+
+.gallows-beam {
+  height: 12px;
+  width: 180px;
+  background: linear-gradient(90deg, #8b4513 0%, #daa520 20%, #8b4513 40%, #cd853f 60%, #8b4513 80%, #a0522d 100%);
+  margin-left: 90px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
+  border: 1px solid #654321;
+}
+
+.gallows-pole {
+  height: 340px;
+  width: 16px;
+  background: linear-gradient(180deg, #8b4513 0%, #a0522d 25%, #8b4513 50%, #cd853f 75%, #8b4513 100%);
+  margin-left: 90px;
+  border-radius: 8px;
+  box-shadow: 4px 0 12px rgba(0,0,0,0.4), inset -2px 0 4px rgba(0,0,0,0.2), inset 2px 0 4px rgba(255,255,255,0.1);
+  border: 1px solid #654321;
+}
+
+.gallows-base {
+  height: 16px;
+  width: 220px;
+  background: linear-gradient(90deg, #2d3436 0%, #636e72 30%, #2d3436 60%, #636e72 100%);
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.1);
+  border: 2px solid #2d3436;
+}
+
+/* HangmanWord styles */
+.hangman-word {
+  display: flex;
+  gap: 0.25em;
+  font-size: 6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: monospace;
+  letter-spacing: 0.25em;
+  perspective: 1000px;
+}
+
+.letter-box {
+  border-bottom: 0.1em solid #333;
+  position: relative;
+  min-width: 1.2em;
+  height: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.1em;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.letter-box.hidden {
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.1);
+  transform: scale(1);
+}
+
+.letter-box.correct {
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
+  transform: scale(1.05);
+  animation: letterGlow 2s ease-in-out infinite alternate;
+}
+
+.letter-box.incorrect {
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.letter-text {
+  transition: all 0.3s ease-out;
+  font-weight: bold;
+}
+
+.letter-text.visible {
+  color: #1f2937;
+  transform: translateY(-2px);
+  font-weight: 900;
+}
+
+.letter-text.hidden {
+  visibility: hidden;
+  color: #1f2937;
+  transform: translateY(0);
+}
+
+.letter-text.incorrect {
+  color: #fef2f2;
+  font-size: 0.9em;
+}
+
+/* Letter effects */
+.letter-sparkle {
+  position: absolute;
+  font-size: 0.3em;
+  color: #fbbf24;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.letter-sparkle.top-right {
+  top: -10px;
+  right: -5px;
+}
+
+.letter-sparkle.bottom-left {
+  bottom: -10px;
+  left: -5px;
+  font-size: 0.25em;
+  color: #10b981;
+}
+
+.letter-skull {
+  position: absolute;
+  top: -15px;
+  right: -10px;
+  font-size: 0.3em;
+  color: #f87171;
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.letter-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.1em;
+  animation: pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.letter-glow.correct {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%);
+}
+
+.letter-glow.incorrect {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, transparent 70%);
+}
+
+/* Keyboard styles */
+.keyboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.keyboard-row:nth-child(2) {
+  padding-left: 1.5rem;
+}
+
+.keyboard-row:nth-child(3) {
+  padding-left: 3rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-game-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .app-content {
+    gap: 1.5rem;
+  }
+  
+  .game-status {
+    font-size: 2rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .word-container {
+    width: 95%;
+  }
+  
+  .hangman-word {
+    font-size: 4rem;
+  }
+  
+  .letter-box {
+    min-width: 1em;
+    height: 1.2em;
+  }
+}
