@@ -1,26 +1,27 @@
 import { useCallback, useEffect, useState, lazy, Suspense } from "react";
-import wordList from "./wordList.json";
+import { type Difficulty, getRandomWord } from "./gameUtils";
 
 // Lazy load components for better performance
 const HangmanDrawing = lazy(() => import("./HangmanDrawing").then(module => ({ default: module.HangmanDrawing })));
 const HangmanWord = lazy(() => import("./HangmanWord").then(module => ({ default: module.HangmanWord })));
 const Keyboard = lazy(() => import("./Keyboard").then(module => ({ default: module.Keyboard })));
+const StartGamePage = lazy(() => import("./StartGamePage").then(module => ({ default: module.StartGamePage })));
 
-function getWord(): string {
-  return wordList[Math.floor(Math.random() * wordList.length)];
-}
+type GameState = "start" | "playing" | "finished";
 
 
 // Main App Component
 function App() {
-  const [wordToGuess, setWordToGuess] = useState(getWord);
+  const [gameState, setGameState] = useState<GameState>("start");
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [wordToGuess, setWordToGuess] = useState("");
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
 
   const incorrectLetters = guessedLetters.filter(letter =>
     !wordToGuess.toUpperCase().includes(letter));
 
   const isLoser = incorrectLetters.length >= 6;
-  const isWinner = wordToGuess
+  const isWinner = wordToGuess.length > 0 && wordToGuess
     .toUpperCase()
     .split("")
     .every(letter => guessedLetters.includes(letter));
@@ -49,20 +50,49 @@ function App() {
     };
   }, [addGuessedLetter, isLoser, isWinner]);
 
+  const startNewGame = useCallback((selectedDifficulty: Difficulty) => {
+    setDifficulty(selectedDifficulty);
+    setWordToGuess(getRandomWord(selectedDifficulty));
+    setGuessedLetters([]);
+    setGameState("playing");
+  }, []);
+
+  const restartGame = useCallback(() => {
+    setWordToGuess(getRandomWord(difficulty));
+    setGuessedLetters([]);
+    setGameState("playing");
+  }, [difficulty]);
+
+  const goToStart = useCallback(() => {
+    setGameState("start");
+    setGuessedLetters([]);
+    setWordToGuess("");
+  }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const key = e.key;
       if (key !== "Enter") return;
       e.preventDefault();
-      setGuessedLetters([]);
-      setWordToGuess(getWord());
+      
+      if (gameState === "playing" && (isLoser || isWinner)) {
+        restartGame();
+      }
     };
 
     document.addEventListener("keypress", handler);
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, []);
+  }, [gameState, isLoser, isWinner, restartGame]);
+
+  if (gameState === "start") {
+    return (
+      <Suspense fallback={<div style={{ padding: "2rem", color: "white", textAlign: "center", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>Loading...</div>}>
+        <StartGamePage onStartGame={startNewGame} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -70,9 +100,29 @@ function App() {
         
         {/* Game Status */}
         <div className={`game-status ${isWinner ? 'winner' : isLoser ? 'loser' : 'playing'}`}>
-          {isWinner && "🎉 You Got It! - Press Enter to Play Again"}
-          {isLoser && "💀 Nice Try! - Press Enter to Try Again"}
+          {isWinner && (
+            <>
+              <span className="desktop-message">🎉 You Got It! - Press Enter to Play Again</span>
+              <span className="mobile-message">🎉 You Got It!</span>
+            </>
+          )}
+          {isLoser && (
+            <>
+              <span className="desktop-message">💀 Nice Try! - Press Enter to Try Again</span>
+              <span className="mobile-message">💀 Nice Try!</span>
+            </>
+          )}
           {gameStatus === "Playing" && "🎯 Guess the Word!"}
+        </div>
+
+        {/* Back to Start Button */}
+        <div className="back-to-start">
+          <button onClick={goToStart} className="back-button">
+            ← Back to Start
+          </button>
+          <div className="difficulty-indicator">
+            Difficulty: <span className="current-difficulty">{difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span>
+          </div>
         </div>
 
         {/* Main Game Layout */}
@@ -87,15 +137,6 @@ function App() {
               <HangmanDrawing numberOfGuesses={incorrectLetters.length} isWinner={isWinner}/>
             </Suspense>
             
-            {/* Game Stats */}
-            <div className="stats-container">
-              <div className="stat-card">
-                📝 Letters Guessed: {guessedLetters.length}
-              </div>
-              <div className="stat-card">
-                ❌ Wrong Guesses: {incorrectLetters.length}/6
-              </div>
-            </div>
           </div>
 
           {/* Right Side - Word Display and Keyboard */}
@@ -117,6 +158,19 @@ function App() {
               </div>
             </div>
 
+            {/* Mobile Retry Button */}
+            {(isWinner || isLoser) && (
+              <div className="mobile-retry-container">
+                <button 
+                  className="mobile-retry-button"
+                  onClick={restartGame}
+                  aria-label="Try Again"
+                >
+                  🔄 Try Again
+                </button>
+              </div>
+            )}
+
             {/* Keyboard */}
             <div className="keyboard-section">
               <h2 className="section-title">
@@ -132,6 +186,16 @@ function App() {
                   addGuessedLetter={addGuessedLetter}
                 />
               </Suspense>
+              
+              {/* Game Stats */}
+              <div className="stats-container">
+                <div className="stat-card">
+                  📝 Letters Guessed: {guessedLetters.length}
+                </div>
+                <div className="stat-card">
+                  ❌ Wrong Guesses: {incorrectLetters.length}/6
+                </div>
+              </div>
             </div>
 
           </div>

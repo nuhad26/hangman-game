@@ -16,11 +16,6 @@ body {
   50% { transform: scale(1.05); }
 }
 
-@keyframes letterGlow {
-  0% { filter: brightness(1) drop-shadow(0 0 5px currentColor); }
-  100% { filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
-}
-
 @keyframes sparkle {
   0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
   50% { opacity: 0.5; transform: scale(1.5) rotate(180deg); }
@@ -35,17 +30,6 @@ body {
 @keyframes pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.7; }
-}
-
-@keyframes letterReveal {
-  0% { 
-    opacity: 0; 
-    transform: scale(0.5) rotateY(-90deg); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: scale(1.05) rotateY(0deg); 
-  }
 }
 
 @keyframes headAppear {
@@ -83,9 +67,10 @@ body {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .app-content {
@@ -93,14 +78,14 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
 }
 
 .main-game-layout {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 3rem;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
   width: 100%;
   align-items: start;
   justify-content: center;
@@ -110,22 +95,23 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .stats-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
   width: 100%;
-  max-width: 300px;
+  max-width: 600px;
+  justify-content: center;
 }
 
 .right-side {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 100%;
 }
 
@@ -135,6 +121,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  overflow: hidden;
 }
 
 .keyboard-section {
@@ -142,7 +129,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* Utility classes for common styles */
@@ -155,13 +142,13 @@ body {
 }
 
 .game-status {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
   color: white;
   text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  padding: 1rem 2rem;
-  border-radius: 20px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
@@ -196,19 +183,21 @@ body {
 
 .word-container {
   background: rgba(255, 255, 255, 0.95);
-  padding: 0rem;
-  border-radius: 60px;
+  padding: 0.75rem;
+  border-radius: 40px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
-  width: 80%;
+  width: 90%;
+  max-width: 100%;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 }
 
 .section-title {
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   margin: 0;
@@ -217,15 +206,70 @@ body {
 /* HangmanDrawing styles */
 .hangman-drawing {
   position: relative;
-  padding: 30px;
+  padding: 20px;
   background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%);
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  margin: 10px;
 }
 
 .hangman-parts {
   position: relative;
+}
+
+.hangman-figure {
+  cursor: grab;
+  touch-action: none; /* Prevent default touch behaviors */
+  user-select: none;  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  transition: transform 0.1s ease-out;
+}
+
+.hangman-figure.is-dragging {
+  cursor: grabbing;
+  transition: none; /* Disable transition while dragging for responsiveness */
+}
+
+/* Mobile drag hint */
+.mobile-drag-hint {
+  display: none;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 10;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+}
+
+/* Mobile-specific touch improvements */
+@media (pointer: coarse) {
+  .hangman-figure {
+    /* Larger touch target for mobile */
+    padding: 10px;
+    margin: -10px;
+  }
+  
+  .hangman-drawing {
+    /* Prevent overscroll on mobile */
+    overscroll-behavior: contain;
+  }
+  
+  .mobile-drag-hint {
+    display: block;
+  }
 }
 
 /* Hangman body parts */
@@ -388,25 +432,55 @@ body {
 /* HangmanWord styles */
 .hangman-word {
   display: flex;
-  gap: 0.25em;
-  font-size: 6rem;
+  flex-wrap: nowrap;
+  gap: 0.15em;
+  font-size: clamp(2rem, 5vw, 4.5rem);
   font-weight: bold;
   text-transform: uppercase;
   font-family: monospace;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.05em;
   perspective: 1000px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.hangman-word::-webkit-scrollbar {
+  height: 4px;
+}
+
+.hangman-word::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hangman-word::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.hangman-word::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .letter-box {
   border-bottom: 0.1em solid #333;
   position: relative;
-  min-width: 1.2em;
-  height: 1.5em;
+  min-width: clamp(0.8em, 1.1em, 1.4em);
+  width: clamp(0.8em, 1.1em, 1.4em);
+  height: clamp(1.2em, 1.5em, 1.8em);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.1em;
-  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .letter-box.hidden {
@@ -419,7 +493,6 @@ body {
   background: linear-gradient(145deg, #4ade80, #22c55e);
   box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
   transform: scale(1.05);
-  animation: letterGlow 2s ease-in-out infinite alternate;
 }
 
 .letter-box.incorrect {
@@ -501,18 +574,25 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
+  border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .keyboard-row {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .keyboard-row:nth-child(2) {
@@ -523,32 +603,297 @@ body {
   padding-left: 3rem;
 }
 
+/* Back to start and difficulty indicator styles */
+.back-to-start {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
+.difficulty-indicator {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.current-difficulty {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+/* Desktop/Mobile Message Display */
+.desktop-message {
+  display: inline;
+}
+
+.mobile-message {
+  display: none;
+}
+
+/* Mobile Retry Button */
+.mobile-retry-container {
+  display: none; /* Hidden by default on desktop */
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.mobile-retry-button {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  transition: all 0.3s ease;
+  touch-action: manipulation;
+  min-width: 160px;
+}
+
+.mobile-retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.mobile-retry-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
+  .app-container {
+    padding: 0.25rem;
+    min-height: 100vh;
+  }
+  
   .main-game-layout {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1rem;
   }
   
   .app-content {
-    gap: 1.5rem;
+    gap: 0.75rem;
   }
   
   .game-status {
-    font-size: 2rem;
-    padding: 0.75rem 1.5rem;
+    font-size: 1.4rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .desktop-message {
+    display: none;
+  }
+  
+  .mobile-message {
+    display: inline;
+  }
+  
+  .mobile-retry-container {
+    display: block; /* Show on mobile */
   }
   
   .word-container {
-    width: 95%;
+    width: 98%;
+    padding: 0.5rem;
+    border-radius: 25px;
   }
   
   .hangman-word {
-    font-size: 4rem;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    gap: 0.05em;
+    letter-spacing: 0.01em;
   }
   
   .letter-box {
-    min-width: 1em;
-    height: 1.2em;
+    min-width: clamp(0.6em, 0.9em, 1.2em);
+    width: clamp(0.6em, 0.9em, 1.2em);
+    height: clamp(0.9em, 1.2em, 1.5em);
+  }
+  
+  .back-to-start {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .back-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .difficulty-indicator {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .hangman-drawing {
+    padding: 15px;
+    margin: 5px;
+    border-radius: 10px;
+  }
+  
+  .keyboard-container {
+    padding: 0.75rem;
+    border-radius: 10px;
+  }
+  
+  .keyboard-section {
+    gap: 0.5rem;
+  }
+  
+  .keyboard-row {
+    gap: 0.3rem;
+  }
+  
+  .keyboard-row:nth-child(2) {
+    padding-left: 0.75rem;
+  }
+  
+  .keyboard-row:nth-child(3) {
+    padding-left: 1.5rem;
+  }
+  
+  .left-side {
+    gap: 0.75rem;
+  }
+  
+  .right-side {
+    gap: 1rem;
+  }
+  
+  .stats-container {
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 300px;
+  }
+  
+  .stat-card {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0.1rem;
+  }
+  
+  .app-content {
+    gap: 0.5rem;
+  }
+  
+  .main-game-layout {
+    gap: 0.75rem;
+  }
+  
+  .game-status {
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .desktop-message {
+    display: none;
+  }
+  
+  .mobile-message {
+    display: inline;
+  }
+  
+  .mobile-retry-container {
+    display: block; /* Show on small mobile */
+  }
+  
+  .mobile-retry-button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    min-width: 140px;
+  }
+  
+  .hangman-word {
+    font-size: clamp(1.2rem, 6vw, 2.2rem);
+  }
+  
+  .letter-box {
+    min-width: clamp(0.5em, 0.8em, 1.1em);
+    width: clamp(0.5em, 0.8em, 1.1em);
+    height: clamp(0.8em, 1.1em, 1.4em);
+  }
+  
+  .section-title {
+    font-size: 0.9rem;
+  }
+  
+  .hangman-drawing {
+    padding: 10px;
+    margin: 2px;
+  }
+  
+  .keyboard-container {
+    padding: 0.5rem;
+  }
+  
+  .keyboard-row {
+    gap: 0.2rem;
+  }
+  
+  .keyboard-row:nth-child(2) {
+    padding-left: 0.5rem;
+  }
+  
+  .keyboard-row:nth-child(3) {
+    padding-left: 1rem;
+  }
+  
+  .back-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .difficulty-indicator {
+    font-size: 0.8rem;
   }
 }

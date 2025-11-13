@@ -1,0 +1,232 @@
+/* Start Game Page Styles */
+.startGameContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.startGameContent {
+  max-width: 600px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Styles */
+.startGameHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.gameTitle {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gameSubtitle {
+  font-size: 1rem;
+  color: #4a5568;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Difficulty Selection */
+.difficultySelection {
+  margin-bottom: 2rem;
+}
+
+.difficultyTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+}
+
+.difficultyCards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.difficultyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background: white;
+  border: 3px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.difficultyCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: #f8fafc;
+}
+
+.difficultyCard:active {
+  transform: translateY(0);
+}
+
+.difficultyIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.difficultyInfo {
+  flex: 1;
+}
+
+.difficultyName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.difficultyDescription {
+  font-size: 0.85rem;
+  color: #4a5568;
+  margin: 0;
+}
+
+.wordCount {
+  font-size: 0.9rem;
+  color: #718096;
+  margin: 0;
+  font-style: italic;
+}
+
+
+/* Game Instructions */
+.gameInstructions {
+  background: #f7fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.instructionsTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+  margin: 0 0 1rem 0;
+}
+
+.instructionsGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+.instructionItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.instructionIcon {
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.instructionText {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .startGameContent {
+    padding: 2rem;
+  }
+  
+  .gameTitle {
+    font-size: 2.5rem;
+  }
+  
+  .difficultyCards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  
+  .difficultyCard {
+    padding: 1.2rem;
+  }
+  
+  .difficultyIcon {
+    font-size: 2.2rem;
+  }
+  
+  .instructionsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .startGameContainer {
+    padding: 1.5rem;
+  }
+  
+  .startGameContent {
+    padding: 2.5rem;
+  }
+  
+  .gameTitle {
+    font-size: 2.8rem;
+  }
+  
+  .difficultyCards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .instructionsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large Desktop Styles */
+@media (min-width: 1200px) {
+  .difficultyCards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+  }
+  
+  .difficultyCard {
+    padding: 1.5rem;
+  }
+}
