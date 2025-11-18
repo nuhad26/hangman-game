@@ -9,6 +9,7 @@ export interface DifficultyConfig {
   maxLength: number;
   color: string;
   icon: string;
+  maxGuesses: number;
 }
 
 export const difficultyConfigs: Record<Difficulty, DifficultyConfig> = {
@@ -18,7 +19,8 @@ export const difficultyConfigs: Record<Difficulty, DifficultyConfig> = {
     minLength: 9,
     maxLength: Infinity,
     color: "#10B981", // green
-    icon: "🟢"
+    icon: "🟢",
+    maxGuesses: 10
   },
   medium: {
     name: "Medium", 
@@ -26,7 +28,8 @@ export const difficultyConfigs: Record<Difficulty, DifficultyConfig> = {
     minLength: 6,
     maxLength: 8,
     color: "#F59E0B", // yellow
-    icon: "🟡"
+    icon: "🟡",
+    maxGuesses: 8
   },
   hard: {
     name: "Hard",
@@ -34,9 +37,14 @@ export const difficultyConfigs: Record<Difficulty, DifficultyConfig> = {
     minLength: 3,
     maxLength: 5,
     color: "#EF4444", // red
-    icon: "🔴"
+    icon: "🔴",
+    maxGuesses: 6
   }
 };
+
+export function getMaxGuesses(difficulty: Difficulty): number {
+  return difficultyConfigs[difficulty].maxGuesses;
+}
 
 export function getWordsByDifficulty(difficulty: Difficulty): string[] {
   const config = difficultyConfigs[difficulty];

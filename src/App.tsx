@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState, lazy, Suspense } from "react";
-import { type Difficulty, getRandomWord } from "./gameUtils";
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from "react";
+
+import { type Difficulty, getRandomWord, getMaxGuesses } from "./gameUtils";
 
 // Lazy load components for better performance
 const HangmanDrawing = lazy(() => import("./HangmanDrawing").then(module => ({ default: module.HangmanDrawing })));
@@ -9,18 +10,19 @@ const StartGamePage = lazy(() => import("./StartGamePage").then(module => ({ def
 
 type GameState = "start" | "playing" | "finished";
 
-
 // Main App Component
 function App() {
   const [gameState, setGameState] = useState<GameState>("start");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [wordToGuess, setWordToGuess] = useState("");
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+  const [revealedWord, setRevealedWord] = useState<string | null>(null);
 
   const incorrectLetters = guessedLetters.filter(letter =>
     !wordToGuess.toUpperCase().includes(letter));
+  const maxGuesses = getMaxGuesses(difficulty);
 
-  const isLoser = incorrectLetters.length >= 6;
+  const isLoser = incorrectLetters.length >= maxGuesses;
   const isWinner = wordToGuess.length > 0 && wordToGuess
     .toUpperCase()
     .split("")
@@ -52,12 +54,14 @@ function App() {
 
   const startNewGame = useCallback((selectedDifficulty: Difficulty) => {
     setDifficulty(selectedDifficulty);
+    setRevealedWord(null);
     setWordToGuess(getRandomWord(selectedDifficulty));
     setGuessedLetters([]);
     setGameState("playing");
   }, []);
 
   const restartGame = useCallback(() => {
+    setRevealedWord(null);
     setWordToGuess(getRandomWord(difficulty));
     setGuessedLetters([]);
     setGameState("playing");
@@ -67,7 +71,20 @@ function App() {
     setGameState("start");
     setGuessedLetters([]);
     setWordToGuess("");
+    setRevealedWord(null);
   }, []);
+
+  const wasLoserRef = useRef(false);
+
+  useEffect(() => {
+    if (!wasLoserRef.current && isLoser && wordToGuess) {
+      setRevealedWord(wordToGuess);
+    }
+
+    wasLoserRef.current = isLoser;
+  }, [isLoser, wordToGuess]);
+
+  const shouldRevealWord = revealedWord === wordToGuess && Boolean(revealedWord);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -150,7 +167,7 @@ function App() {
               <div className="word-container">
                 <Suspense fallback={<div style={{ padding: "2rem", color: "#666", textAlign: "center" }}>Loading...</div>}>
                   <HangmanWord
-                    reveal={isLoser}
+                    reveal={shouldRevealWord}
                     guessedLetters={guessedLetters}
                     wordToGuess={wordToGuess}
                   />
@@ -193,7 +210,7 @@ function App() {
                   📝 Letters Guessed: {guessedLetters.length}
                 </div>
                 <div className="stat-card">
-                  ❌ Wrong Guesses: {incorrectLetters.length}/6
+                  ❌ Wrong Guesses: {incorrectLetters.length}/{maxGuesses}
                 </div>
               </div>
             </div>

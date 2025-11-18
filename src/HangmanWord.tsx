@@ -27,7 +27,7 @@ export function HangmanWord({guessedLetters, wordToGuess, reveal = false}: Hangm
                         className={letterBoxClass}
                     >
                         <span className={letterTextClass}>
-                            {letter}
+                            {isVisible ? letter : ""}
                         </span>
                     </span>
                 )
